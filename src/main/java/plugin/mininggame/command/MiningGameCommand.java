@@ -116,10 +116,9 @@ public class MiningGameCommand extends BaseCommand implements  Listener {
             executingPlayer = addNewPlayer(player);
         } else {
             executingPlayer = playerList.stream()
+                    .filter(ps -> ps.getPlayerName().equals(player.getName())) // 修正部分: プレイヤー名でフィルタリング
                     .findFirst()
-                    .map(ps -> ps.getPlayerName().equals(player.getName())
-                            ? ps
-                            : addNewPlayer(player)).orElse(executingPlayer);
+                    .orElseGet(() -> addNewPlayer(player)); // 該当プレイヤーが見つからない場合に新規追加
         }
 
         executingPlayer.setGameTime(GAME_TIME);
