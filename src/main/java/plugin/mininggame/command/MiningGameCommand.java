@@ -214,6 +214,7 @@ public class MiningGameCommand extends BaseCommand implements  Listener {
                 playerScoreData.insert(
                         new PlayerScore(nowPlayer.getPlayerName()
                                 , nowPlayer.getScore()));
+                removePlayerFromList(player); // 修正部分: プレイヤーをリストから削除
                 return;
             }
 
@@ -225,9 +226,7 @@ public class MiningGameCommand extends BaseCommand implements  Listener {
         }, 20L, 20L);
     }
 
-
     @EventHandler
-
     public void onBlockBreak(BlockBreakEvent e) {
         org.bukkit.entity.Player player = e.getPlayer();
         Block block = e.getBlock();
@@ -245,9 +244,9 @@ public class MiningGameCommand extends BaseCommand implements  Listener {
                     int newScore = p.getScore() + scoreToAdd;
                     p.setScore(newScore);
                     player.sendMessage("鉱石を破壊した！"
-                                    + blockType.name() + " で "
-                                    + scoreToAdd + " 点獲得。現在のスコアは"
-                                    + newScore + "点！");
+                            + blockType.name() + " で "
+                            + scoreToAdd + " 点獲得。現在のスコアは"
+                            + newScore + "点！");
                 });
     }
 
@@ -334,7 +333,12 @@ public class MiningGameCommand extends BaseCommand implements  Listener {
         }
     }
 
-
-
-
+    /**
+     * 指定されたプレイヤーをplayerListから削除します。
+     * ゲーム終了時に呼び出し、プレイヤーの情報をリストから削除します。
+     * @param player　リストから削除する対象のプレイヤー
+     */
+    private void removePlayerFromList(org.bukkit.entity.Player player) {
+        playerList.removeIf(p -> p.getPlayerName().equals(player.getName())); // 修正部分: プレイヤー情報を削除
+    }
 }
